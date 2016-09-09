@@ -1,6 +1,5 @@
 package org.spdcalpoly;
 
-import java.util.PrimitiveIterator;
 import java.util.Scanner;
 
 /**
@@ -20,7 +19,7 @@ class DialogManager {
     private Scanner userInput;
 
     // The index where the last array prompt ended.
-    // Accessor: protected lastArrayPromptIndex()
+    // Accessor: protected getLastArrayPromptIndex()
     private int lastArrayPromptIndex;
 
     /**
@@ -36,7 +35,10 @@ class DialogManager {
      */
     void welcomePlayer() {
         System.out.println("\nLiar's Dice AI is starting...");
-        System.out.println("Welcome new player!\n");
+        System.out.println("Welcome new player!");
+        System.out.print("\nThe AI is controlled by entering commands into ");
+        System.out.print("the AI console.\nFor a complete list of commands, ");
+        System.out.println("enter the \"help\" command.\n");
     }
 
     /**
@@ -207,7 +209,7 @@ class DialogManager {
      * An accessor for the lastArrayPromptIndex instance variable.
      * @return The last index where a value was added to a prompted array.
      */
-    int lastArrayPromptIndex() {
+    int getLastArrayPromptIndex() {
         return lastArrayPromptIndex;
     }
 

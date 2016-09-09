@@ -15,9 +15,6 @@ class GameManager {
     // Used to communicate with the AI player.
     private DialogManager dialogManager;
 
-    // The game the AI is currently playing.
-    private Game currentGame;
-
     /**
      * An empty constructor. Initializes all instance variables.
      */
@@ -30,6 +27,9 @@ class GameManager {
      */
     void startAI() {
 
+        // The current game the AI player is playing.
+        Game currentGame;
+
         // Loop over each game to play.
         do {
 
@@ -40,10 +40,10 @@ class GameManager {
             do {
 
                 // Prompt the AI player for a command.
-                dialogManager.promptString("\nAI @> ");
+                String command = dialogManager.promptString("\nAI @> ");
 
-                // For whatever reason the AI lost a die.
-                currentGame.aiDiceCountDecr();
+                // Allow the game to handle the command.
+                currentGame.processCommand(command);
 
             }
             while (currentGame.isPlayable());
@@ -71,10 +71,10 @@ class GameManager {
         boolean usingWilds = dialogManager.promptBoolean("Are you playing with wild numbers (yes or no)? ");
         if (usingWilds) {
             int[] wilds = dialogManager.promptIntegerArray("Which numbers are wild (delimit with spaces)? ", 6, false);
-            newGame = new Game(numPlayers, numDice, wilds);
+            newGame = new BasicGame(numPlayers, numDice, wilds);
         }
         else {
-            newGame = new Game(numPlayers, numDice);
+            newGame = new BasicGame(numPlayers, numDice);
         }
 
         return newGame;
