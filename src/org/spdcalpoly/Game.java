@@ -62,4 +62,22 @@ class Game {
         }
     }
 
+    /**
+     * Determines if this game is still playable.
+     * @return Whether the game is still playable.
+     */
+    boolean isPlayable() {
+
+        // As long as the AI has dice, it can still play.
+        return aiDiceCount != 0;
+
+    }
+
+    /**
+     * Decrements the number of dice the AI has. Emulates the AI losing a die.
+     */
+    void aiDiceCountDecr() {
+        aiDiceCount -= 1;
+    }
+
 }

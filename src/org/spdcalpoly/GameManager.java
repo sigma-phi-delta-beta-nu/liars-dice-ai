@@ -23,7 +23,6 @@ class GameManager {
      */
     GameManager() {
         dialogManager = new DialogManager();
-        currentGame = startGame();
     }
 
     /**
@@ -31,11 +30,26 @@ class GameManager {
      */
     void startAI() {
 
+        // Loop over each game to play.
         do {
-            // Play the game.
-            dialogManager.promptString("\nAI @> ");
+
+            // Start a new game.
+            currentGame = startGame();
+
+            // Loop over each command to enter until the game is over.
+            do {
+
+                // Prompt the AI player for a command.
+                dialogManager.promptString("\nAI @> ");
+
+                // For whatever reason the AI lost a die.
+                currentGame.aiDiceCountDecr();
+
+            }
+            while (currentGame.isPlayable());
+
         }
-        while (dialogManager.promptBoolean("Play another game (yes or no)? "));
+        while (dialogManager.promptBoolean("\nPlay another game (yes or no)? "));
 
     }
 
