@@ -1,24 +1,16 @@
 package org.spdcalpoly;
 
-import net.sf.javaml.core.Dataset;
-
 /**
  * ProbabilityAI.java
  *
  * The ProbabilityAI class is used to make decisions based on probabilities
  * drawn from the game's data.
+ *
+ * @author Brandon Kelley
+ * @since 09/10/2016
+ * @version 1.0
  */
 public class ProbabilityAI implements AI {
-    
-    /**
-     * Read in training data from past collections.
-     *
-     * @return A dataset of the training data.
-     */
-    @Override
-    public Dataset generateData() {
-        return null;
-    }
 
     /**
      * Stochastically update the data from the current game.
@@ -29,12 +21,12 @@ public class ProbabilityAI implements AI {
     }
 
     /**
-     * Run the current model and make a prediction.
+     * Run the AI and make a prediction.
      *
      * @return The prediction string.
      */
     @Override
-    public String runModel() {
+    public String runAI() {
         return null;
     }
 

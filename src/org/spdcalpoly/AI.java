@@ -15,20 +15,14 @@ import net.sf.javaml.core.Dataset;
 public interface AI {
 
     /**
-     * Read in training data from past collections.
-     * @return A dataset of the training data.
-     */
-    Dataset generateData();
-
-    /**
      * Stochastically update the data from the current game.
      */
     void updateData();
 
     /**
-     * Run the current model and make a prediction.
+     * Run the AI and make a prediction.
      * @return The prediction string.
      */
-    String runModel();
+    String runAI();
 
 }
