@@ -1,5 +1,15 @@
 package org.spdcalpoly;
 
+import net.sf.javaml.classification.tree.RandomForest;
+import net.sf.javaml.core.Dataset;
+import net.sf.javaml.core.DefaultDataset;
+import net.sf.javaml.core.DenseInstance;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Scanner;
+
 /**
  * BasicGame.java
  *
@@ -12,16 +22,49 @@ package org.spdcalpoly;
  */
 class BasicGame implements Game {
 
-    // The number of dice the AI currently has.
+    enum InstanceIndices {
+
+    }
+
+    // The dialog manager used to communicate with the AI player.
+    private DialogManager dialogManager;
+
+    // The number of dice the AI player currently has.
     private int aiDiceCount;
+
+    // The number of dice the player before the AI player currently has.
+    private int prevPlayerDiceCount;
+
+    // The total number of dice still left in the game.
+    private int totalDiceCount;
+
+    // The dice numbers the AI player is currently holding.
+    private ArrayList<Integer> aiDice;
+
+    // Whether wilds are allowed
+    private boolean usingWilds;
+
+    // The dice numbers that are considered wild.
+    private ArrayList<Integer> wilds;
+
+    // The machine learning classifier used.
+    private RandomForest classifier;
 
     /**
      * This constructor initializes all game data without using wilds.
      * @param numPlayers The number of players in the game.
      * @param numDice The number of dice each player starts with.
      */
-    BasicGame(int numPlayers, int numDice) {
+    BasicGame(DialogManager dm, int numPlayers, int numDice) {
+        dialogManager = dm;
         aiDiceCount = numDice;
+        prevPlayerDiceCount = numDice;
+        totalDiceCount = numPlayers * numDice;
+        aiDice = new ArrayList<Integer>();
+        usingWilds = false;
+        wilds = new ArrayList<Integer>();
+        Dataset trainingData = generateData();
+        classifier.buildClassifier(trainingData);
     }
 
     /**
@@ -30,8 +73,10 @@ class BasicGame implements Game {
      * @param numDice The number of dice each player starts with.
      * @param wildValues The dice values used as wild.
      */
-    BasicGame(int numPlayers, int numDice, int[] wildValues) {
-        this(numPlayers, numDice);
+    BasicGame(DialogManager dm, int numPlayers, int numDice, ArrayList<Integer> wildValues) {
+        this(dm, numPlayers, numDice);
+        usingWilds = true;
+        wilds.addAll(wildValues);
     }
 
     /**
@@ -51,8 +96,89 @@ class BasicGame implements Game {
      */
     public void processCommand(String command) {
 
-        // Decrement number of dice AI has so the game will end eventually.
-        aiDiceCount -= 1;
+        switch (command) {
+
+            case "help":
+                outputHelp();
+                break;
+
+            case "ai lost a die":
+                aiDiceCount -= 1;
+                totalDiceCount -= 1;
+                break;
+
+            case "ai gained a die":
+                aiDiceCount += 1;
+                totalDiceCount += 1;
+
+            case "previous player lost a die":
+                prevPlayerDiceCount -= 1;
+                totalDiceCount -= 1;
+                break;
+
+            case "previous player gained a die":
+                prevPlayerDiceCount += 1;
+                totalDiceCount += 1;
+                break;
+
+            case "player lost a die":
+                totalDiceCount -= 1;
+                break;
+
+            case "player gained a die":
+                totalDiceCount += 1;
+                break;
+
+            case "roll":
+                aiDice.clear();
+                aiDice = dialogManager.promptIntegerArray("Enter the numbers rolled (delimited by spaces) ",
+                        aiDiceCount, true);
+                break;
+
+            case "your turn":
+                dialogManager.println("You should say: " + runModel());
+                break;
+
+        }
+
+    }
+
+    private void outputHelp() {
+        dialogManager.println("Available commands:");
+        dialogManager.println("  help");
+        dialogManager.println("  ai lost a die");
+        dialogManager.println("  ai gained a die");
+        dialogManager.println("  previous player lost a die");
+        dialogManager.println("  previous player gained a die");
+        dialogManager.println("  player lost a die");
+        dialogManager.println("  player gained a die");
+        dialogManager.println("  roll");
+        dialogManager.println("  your turn\n");
+    }
+
+    private String runModel() {
+        return "";
+    }
+
+    private Dataset generateData() {
+
+        DefaultDataset dataset = new DefaultDataset();
+        DenseInstance currentInstance = null;
+        Scanner reader = null;
+
+        try {
+            reader = new Scanner(new File("C:\\Users\\bkell\\Desktop\\code\\projects\\liars-dice-ai\\basic-training-data.txt"));
+        }
+        catch (FileNotFoundException e) {
+            dialogManager.println("The training data file could not be found.");
+            System.exit(1);
+        }
+
+        while (reader.hasNext()) {
+            int instanceSize = 3 + aiDiceCount + wilds.size();
+            currentInstance = new DenseInstance(instanceSize);
+            //currentInstance.put("prevPlayerDiceCount", prevPlayerDiceCount);
+        }
 
     }
 

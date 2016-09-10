@@ -1,5 +1,7 @@
 package org.spdcalpoly;
 
+import java.util.ArrayList;
+
 /**
  * GameManager.java
  *
@@ -63,18 +65,22 @@ class GameManager {
         Game newGame;
 
         // Display a friendly welcome message.
-        dialogManager.welcomePlayer();
+        dialogManager.println("\nLiar's Dice AI is starting...");
+        dialogManager.println("Welcome new player!");
+        dialogManager.print("\nThe AI is controlled by entering commands into ");
+        dialogManager.print("the AI console.\nFor a complete list of commands, ");
+        dialogManager.println("enter the \"help\" command.\n");
 
         // Ask the user for important information and create the game.
         int numPlayers = dialogManager.promptInteger("How many players are there? ");
         int numDice = dialogManager.promptInteger("How many dice does each player get to start? ");
         boolean usingWilds = dialogManager.promptBoolean("Are you playing with wild numbers (yes or no)? ");
         if (usingWilds) {
-            int[] wilds = dialogManager.promptIntegerArray("Which numbers are wild (delimit with spaces)? ", 6, false);
-            newGame = new BasicGame(numPlayers, numDice, wilds);
+            ArrayList<Integer> wilds = dialogManager.promptIntegerArray("Which numbers are wild (delimit with spaces)? ", 6, false);
+            newGame = new BasicGame(dialogManager, numPlayers, numDice, wilds);
         }
         else {
-            newGame = new BasicGame(numPlayers, numDice);
+            newGame = new BasicGame(dialogManager, numPlayers, numDice);
         }
 
         return newGame;

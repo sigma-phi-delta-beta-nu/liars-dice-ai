@@ -1,5 +1,6 @@
 package org.spdcalpoly;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -30,15 +31,12 @@ class DialogManager {
         lastArrayPromptIndex = -1;
     }
 
-    /**
-     * Outputs an AI start message to the AI player in a friendly manner.
-     */
-    void welcomePlayer() {
-        System.out.println("\nLiar's Dice AI is starting...");
-        System.out.println("Welcome new player!");
-        System.out.print("\nThe AI is controlled by entering commands into ");
-        System.out.print("the AI console.\nFor a complete list of commands, ");
-        System.out.println("enter the \"help\" command.\n");
+    void print(String text) {
+        System.out.print(text);
+    }
+
+    void println(String text) {
+        System.out.println(text);
     }
 
     /**
@@ -115,10 +113,7 @@ class DialogManager {
 
     /**
      * Retrieves a integer array (delimited by spaces) from the AI player using
-     * the provided prompt. If the array is not filled to size, retrieved
-     * integers are guaranteed to appear at the front and the remaining will be
-     * set to -1. If it is necessary, the last array index can be retrieved
-     * using its accessor. Returns null if the input could not be parsed to an
+     * the provided prompt. Returns null if the input could not be parsed to an
      * integer array.
      * @param prompt The string to output asking for an integer array.
      * @param size The maximum number of entries the AI player can input.
@@ -126,13 +121,14 @@ class DialogManager {
      *     that many.
      * @return The integer array received from the AI player.
      */
-    int[] promptIntegerArray(String prompt, int size, boolean exact) {
+    ArrayList<Integer> promptIntegerArray(String prompt, int size,
+                                          boolean exact) {
 
         // Call the generic prompt and pass it a function for parsing integer
         // arrays that satisfy the size and exact parameter requirements.
         return this.prompt(prompt, "list of numbers", (String input) -> {
 
-            int[] found = new int[size];
+            ArrayList<Integer> found = new ArrayList<Integer>();
             String[] tokens = input.split("\\s+");
 
             // If the number of tokens is not exact and it was supposed to be,
@@ -146,7 +142,8 @@ class DialogManager {
 
                 // Try to parse it into an integer.
                 try {
-                    found[lastArrayPromptIndex++ + 1] = Integer.parseInt(token);
+                    found.add(Integer.parseInt(token));
+                    lastArrayPromptIndex += 1;
                 }
 
                 // If parsing to an integer fails, oh well.
@@ -154,11 +151,6 @@ class DialogManager {
                     return null;
                 }
 
-            }
-
-            // Fill the remaining places in the array with -1.
-            for (int i = lastArrayPromptIndex + 1; i < size; i++) {
-                found[i] = -1;
             }
 
             return found;
