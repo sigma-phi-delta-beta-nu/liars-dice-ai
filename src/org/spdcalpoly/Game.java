@@ -1,6 +1,7 @@
 package org.spdcalpoly;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Game.java
@@ -21,11 +22,14 @@ class Game {
     // The dialog manager used to communicate with the AI player.
     private DialogManager dialogManager;
 
-    // The number of dice the AI player currently has.
-    private int aiDiceCount;
+    // The number of players still playing in the game
+    private int numPlayers;
 
-    // The number of dice the player before the AI player currently has.
-    private int prevPlayerDiceCount;
+    // The number of dice each player has
+    private ArrayList<Integer> playerHandSizes;
+
+    // The AI position within the players
+    private int aiPosition;
 
     // The total number of dice still left in the game.
     private int totalDiceCount;
@@ -39,19 +43,35 @@ class Game {
     // The dice numbers that are considered wild.
     private ArrayList<Integer> wilds;
 
+    // AI object that will be predicting
+    private AI beepboop;
+
+    // Position of the player who's turn it is currently
+    private int currentPlayer;
+
     /**
      * This constructor initializes all game data without using wilds.
-     * @param numPlayers The number of players in the game.
+     * @param players The number of players in the game.
      * @param numDice The number of dice each player starts with.
      */
-    Game(DialogManager dm, int numPlayers, int numDice) {
+    Game(DialogManager dm, int players, int numDice, AI robot, int robotPosition, int playerStart) {
         dialogManager = dm;
-        aiDiceCount = numDice;
-        prevPlayerDiceCount = numDice;
+        numPlayers = players;
+        playerHandSizes = new ArrayList<Integer>(Collections.nCopies(numPlayers, numDice));
+        aiPosition = robotPosition;
+        beepboop = robot;
         totalDiceCount = numPlayers * numDice;
         aiDice = new ArrayList<Integer>();
         usingWilds = false;
         wilds = new ArrayList<Integer>();
+        if (playerStart >= players) {
+            playerStart = players - 1;
+        }
+        else if (playerStart < 0)
+        {
+            playerStart = 0;
+        }
+        currentPlayer = playerStart;
     }
 
     /**
@@ -60,8 +80,8 @@ class Game {
      * @param numDice The number of dice each player starts with.
      * @param wildValues The dice values used as wild.
      */
-    Game(DialogManager dm, int numPlayers, int numDice, ArrayList<Integer> wildValues) {
-        this(dm, numPlayers, numDice);
+    Game(DialogManager dm, int numPlayers, int numDice, ArrayList<Integer> wildValues, AI robot, int robotPosition, int playerStart) {
+        this(dm, numPlayers, numDice, robot, robotPosition, playerStart);
         usingWilds = true;
         wilds.addAll(wildValues);
     }
@@ -73,7 +93,7 @@ class Game {
     public boolean isPlayable() {
 
         // As long as the AI has dice, it can still play.
-        return aiDiceCount != 0;
+        return playerHandSizes.get(aiPosition) != 0;
 
     }
 
@@ -98,16 +118,6 @@ class Game {
                 aiDiceCount += 1;
                 totalDiceCount += 1;
 
-            case "previous player lost a die":
-                prevPlayerDiceCount -= 1;
-                totalDiceCount -= 1;
-                break;
-
-            case "previous player gained a die":
-                prevPlayerDiceCount += 1;
-                totalDiceCount += 1;
-                break;
-
             case "player lost a die":
                 totalDiceCount -= 1;
                 break;
@@ -119,15 +129,21 @@ class Game {
             case "roll":
                 aiDice.clear();
                 aiDice = dialogManager.promptIntegerArray("Enter the numbers rolled (delimited by spaces) ",
-                        aiDiceCount, true);
+                        playerHandSizes.get(aiPosition), true);
                 break;
 
-            //case "your turn":
-            //    dialogManager.println("You should say: " + runModel());
-            //    break;
+            case "your turn":
+                dialogManager.println("You should say: " + beepboop.runModel());
+                break;
 
         }
 
+        // TODO: account for when a player is out of the game here
+        // TODO: account for when there is a single player left who is the winner
+        currentPlayer++;
+        if (currentPlayer == numPlayers) {
+            currentPlayer = 0;
+        }
     }
 
     private void outputHelp() {
@@ -135,8 +151,6 @@ class Game {
         dialogManager.println("  help");
         dialogManager.println("  ai lost a die");
         dialogManager.println("  ai gained a die");
-        dialogManager.println("  previous player lost a die");
-        dialogManager.println("  previous player gained a die");
         dialogManager.println("  player lost a die");
         dialogManager.println("  player gained a die");
         dialogManager.println("  roll");
