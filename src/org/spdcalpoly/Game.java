@@ -103,29 +103,71 @@ class Game {
      */
     public void processCommand(String command) {
 
+        String whichPlayer;
+
         switch (command) {
 
+            case "h":
             case "help":
                 outputHelp();
                 break;
 
-            case "ai lost a die":
-                aiDiceCount -= 1;
+            case "c":
+            case "call":
+                int numDice = dialogManager.promptInteger("Enter number of dice called: ");
+                int diceVal = dialogManager.promptInteger("Enter the value of dice called: ");
+
+                currentPlayer++;
+                break;
+
+            case "p":
+            case "pass":
+                currentPlayer++;
+                break;
+
+            case "l":
+            case "lost a die":
+                whichPlayer = dialogManager.promptString("Last or current player? ");
+                switch (whichPlayer) {
+
+                    case "l":
+                    case "last player":
+                    case "last":
+                        playerHandSizes.set(currentPlayer - 1, playerHandSizes.get(currentPlayer - 1) - 1);
+                        break;
+
+                    case "c":
+                    case "current player":
+                    case "current":
+                        playerHandSizes.set(currentPlayer, playerHandSizes.get(currentPlayer) - 1);
+                        break;
+                }
+
                 totalDiceCount -= 1;
                 break;
 
-            case "ai gained a die":
-                aiDiceCount += 1;
-                totalDiceCount += 1;
+            case "g":
+            case "gain a die":
+                whichPlayer = dialogManager.promptString("Last or current player? ");
+                switch (whichPlayer) {
 
-            case "player lost a die":
-                totalDiceCount -= 1;
+                    case "l":
+                    case "last player":
+                    case "last":
+                        playerHandSizes.set(currentPlayer - 1, playerHandSizes.get(currentPlayer - 1) + 1);
+                        break;
+
+                    case "c":
+                    case "current player":
+                    case "current":
+                        playerHandSizes.set(currentPlayer, playerHandSizes.get(currentPlayer) + 1);
+                        break;
+                }
+
+                totalDiceCount += 1;
                 break;
 
-            case "player gained a die":
-                totalDiceCount += 1;
-                break;
-
+            case "r":
             case "roll":
                 aiDice.clear();
                 aiDice = dialogManager.promptIntegerArray("Enter the numbers rolled (delimited by spaces) ",
@@ -134,13 +176,13 @@ class Game {
 
             case "your turn":
                 dialogManager.println("You should say: " + beepboop.runModel());
+                currentPlayer++;
                 break;
 
         }
 
         // TODO: account for when a player is out of the game here
         // TODO: account for when there is a single player left who is the winner
-        currentPlayer++;
         if (currentPlayer == numPlayers) {
             currentPlayer = 0;
         }
@@ -148,12 +190,12 @@ class Game {
 
     private void outputHelp() {
         dialogManager.println("Available commands:");
-        dialogManager.println("  help");
-        dialogManager.println("  ai lost a die");
-        dialogManager.println("  ai gained a die");
-        dialogManager.println("  player lost a die");
-        dialogManager.println("  player gained a die");
-        dialogManager.println("  roll");
+        dialogManager.println("  help [h]");
+        dialogManager.println("  call [c]");
+        dialogManager.println("  pass [p]");
+        dialogManager.println("  lost a die [l]");
+        dialogManager.println("  gain a die [g]");
+        dialogManager.println("  roll [r]");
         dialogManager.println("  your turn\n");
     }
 }
