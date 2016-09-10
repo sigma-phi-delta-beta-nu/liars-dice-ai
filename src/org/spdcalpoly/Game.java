@@ -175,7 +175,7 @@ class Game {
                 break;
 
             case "your turn":
-                dialogManager.println("You should say: " + beepboop.runModel());
+                dialogManager.println("You should say: " + beepboop.runAI());
                 currentPlayer++;
                 break;
 
