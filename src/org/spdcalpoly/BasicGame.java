@@ -1,14 +1,6 @@
 package org.spdcalpoly;
 
-import net.sf.javaml.classification.tree.RandomForest;
-import net.sf.javaml.core.Dataset;
-import net.sf.javaml.core.DefaultDataset;
-import net.sf.javaml.core.DenseInstance;
-
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 /**
  * BasicGame.java
@@ -47,9 +39,6 @@ class BasicGame implements Game {
     // The dice numbers that are considered wild.
     private ArrayList<Integer> wilds;
 
-    // The machine learning classifier used.
-    private RandomForest classifier;
-
     /**
      * This constructor initializes all game data without using wilds.
      * @param numPlayers The number of players in the game.
@@ -63,8 +52,6 @@ class BasicGame implements Game {
         aiDice = new ArrayList<Integer>();
         usingWilds = false;
         wilds = new ArrayList<Integer>();
-        Dataset trainingData = generateData();
-        classifier.buildClassifier(trainingData);
     }
 
     /**
@@ -135,9 +122,9 @@ class BasicGame implements Game {
                         aiDiceCount, true);
                 break;
 
-            case "your turn":
-                dialogManager.println("You should say: " + runModel());
-                break;
+            //case "your turn":
+            //    dialogManager.println("You should say: " + runModel());
+            //    break;
 
         }
 
@@ -155,31 +142,4 @@ class BasicGame implements Game {
         dialogManager.println("  roll");
         dialogManager.println("  your turn\n");
     }
-
-    private String runModel() {
-        return "";
-    }
-
-    private Dataset generateData() {
-
-        DefaultDataset dataset = new DefaultDataset();
-        DenseInstance currentInstance = null;
-        Scanner reader = null;
-
-        try {
-            reader = new Scanner(new File("C:\\Users\\bkell\\Desktop\\code\\projects\\liars-dice-ai\\basic-training-data.txt"));
-        }
-        catch (FileNotFoundException e) {
-            dialogManager.println("The training data file could not be found.");
-            System.exit(1);
-        }
-
-        while (reader.hasNext()) {
-            int instanceSize = 3 + aiDiceCount + wilds.size();
-            currentInstance = new DenseInstance(instanceSize);
-            //currentInstance.put("prevPlayerDiceCount", prevPlayerDiceCount);
-        }
-
-    }
-
 }
