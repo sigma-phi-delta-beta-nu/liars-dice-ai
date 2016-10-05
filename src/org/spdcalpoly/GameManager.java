@@ -50,6 +50,8 @@ class GameManager {
             }
             while (currentGame.isPlayable());
 
+            dialogManager.println(currentGame.getResults());
+
         }
         while (dialogManager.promptBoolean("\nPlay another game (yes or no)? "));
 

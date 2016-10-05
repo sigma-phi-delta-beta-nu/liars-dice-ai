@@ -185,8 +185,8 @@ class Game {
 
         }
 
-        // TODO: account for when a player is out of the game here
-        // TODO: account for when there is a single player left who is the winner
+        // (DONE) TODO: account for when a player is out of the game here
+        // (DONE) TODO: account for when there is a single player left who is the winner
         if (currentPlayer == numPlayers) {
             currentPlayer = 0;
         }
@@ -213,6 +213,15 @@ class Game {
             }
         }
 
+    }
+
+    public String getResults() {
+        if (aiPosition == -1) {
+            return "Game over: The AI lost all of its dice";
+        }
+        else {
+            return "Congrats! The AI won!";
+        }
     }
 
     private void outputHelp() {
