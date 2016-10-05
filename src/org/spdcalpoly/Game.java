@@ -93,7 +93,7 @@ class Game {
     public boolean isPlayable() {
 
         // As long as the AI has dice, it can still play.
-        return playerHandSizes.get(aiPosition) != 0;
+        return aiPosition != -1 && playerHandSizes.size() > 1;
 
     }
 
@@ -179,6 +179,10 @@ class Game {
                 currentPlayer++;
                 break;
 
+            default:
+                dialogManager.println("Command not found. Please try again.");
+                break;
+
         }
 
         // TODO: account for when a player is out of the game here
@@ -186,6 +190,29 @@ class Game {
         if (currentPlayer == numPlayers) {
             currentPlayer = 0;
         }
+
+        // Save current player hands and AI position
+        ArrayList<Integer> oldHands = playerHandSizes;
+        int oldAiPosition = aiPosition;
+
+        // Generate a new list of player hands after checking if all players
+        // have a hand still.
+        playerHandSizes = new ArrayList<Integer>();
+        for (int i = 0; i < oldHands.size(); i++) {
+            if (oldHands.get(i) == 0) {
+                numPlayers -= 1;
+                if (i < oldAiPosition) {
+                    aiPosition -= 1;
+                }
+                else if (i == oldAiPosition) {
+                    aiPosition =- 1;
+                }
+            }
+            else {
+                playerHandSizes.add(oldHands.get(i));
+            }
+        }
+
     }
 
     private void outputHelp() {

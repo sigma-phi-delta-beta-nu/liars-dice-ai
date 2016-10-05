@@ -77,10 +77,10 @@ class GameManager {
         boolean usingWilds = dialogManager.promptBoolean("Are you playing with wild numbers (yes or no)? ");
         if (usingWilds) {
             ArrayList<Integer> wilds = dialogManager.promptIntegerArray("Which numbers are wild (delimit with spaces)? ", 6, false);
-            newGame = new Game(dialogManager, numPlayers, numDice, wilds);
+            newGame = new Game(dialogManager, numPlayers, numDice, wilds, new ProbabilityAI(), 0, 0);
         }
         else {
-            newGame = new Game(dialogManager, numPlayers, numDice);
+            newGame = new Game(dialogManager, numPlayers, numDice, new ProbabilityAI(), 0, 0);
         }
 
         return newGame;
