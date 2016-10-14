@@ -1,5 +1,6 @@
 package org.spdcalpoly;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -23,12 +24,25 @@ class DialogManager {
     // Accessor: protected getLastArrayPromptIndex()
     private int lastArrayPromptIndex;
 
+    {
+        lastArrayPromptIndex = -1;
+    }
+
     /**
      * Empty constructor, initializes all instance variables.
      */
     DialogManager() {
         userInput = new Scanner(System.in);
-        lastArrayPromptIndex = -1;
+    }
+
+    DialogManager(String filename) {
+        try {
+            userInput = new Scanner(new File(filename));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
 
     void print(String text) {

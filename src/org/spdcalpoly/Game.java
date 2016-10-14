@@ -15,10 +15,6 @@ import java.util.Collections;
  */
 class Game {
 
-    enum InstanceIndices {
-
-    }
-
     // The dialog manager used to communicate with the AI player.
     private DialogManager dialogManager;
 
@@ -116,7 +112,7 @@ class Game {
             case "call":
                 int numDice = dialogManager.promptInteger("Enter number of dice called: ");
                 int diceVal = dialogManager.promptInteger("Enter the value of dice called: ");
-
+                dialogManager.println("You should say: " + beepboop.runAI(numDice, diceVal));
                 currentPlayer++;
                 break;
 
@@ -172,11 +168,6 @@ class Game {
                 aiDice.clear();
                 aiDice = dialogManager.promptIntegerArray("Enter the numbers rolled (delimited by spaces) ",
                         playerHandSizes.get(aiPosition), true);
-                break;
-
-            case "your turn":
-                dialogManager.println("You should say: " + beepboop.runAI());
-                currentPlayer++;
                 break;
 
             default:

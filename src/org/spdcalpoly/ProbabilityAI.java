@@ -26,7 +26,7 @@ public class ProbabilityAI implements AI {
      * @return The prediction string.
      */
     @Override
-    public String runAI() {
+    public String runAI(int numDice, int diceVal) {
         return null;
     }
 

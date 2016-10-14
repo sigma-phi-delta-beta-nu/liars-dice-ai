@@ -23,6 +23,6 @@ public interface AI {
      * Run the AI and make a prediction.
      * @return The prediction string.
      */
-    String runAI();
+    String runAI(int numDice, int diceVal);
 
 }

@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * @since 09/08/2015
  * @version 1.0
  */
-class GameManager {
+public class GameManager {
 
     // Used to communicate with the AI player.
     private DialogManager dialogManager;
@@ -20,14 +20,18 @@ class GameManager {
     /**
      * An empty constructor. Initializes all instance variables.
      */
-    GameManager() {
+    public GameManager() {
         dialogManager = new DialogManager();
+    }
+
+    public GameManager(String inputFileName) {
+        dialogManager = new DialogManager(inputFileName);
     }
 
     /**
      * Runs the AI based on input from the user.
      */
-    void startAI() {
+    public void startAI() {
 
         // The current game the AI player is playing.
         Game currentGame;
