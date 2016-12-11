@@ -1,7 +1,5 @@
 package org.spdcalpoly;
 
-import net.sf.javaml.core.Dataset;
-
 /**
  * AI.java
  *
@@ -14,15 +12,12 @@ import net.sf.javaml.core.Dataset;
  */
 public interface AI {
 
-    /**
-     * Stochastically update the data from the current game.
-     */
-    void updateData();
+    void setGame(Game game);
 
     /**
      * Run the AI and make a prediction.
      * @return The prediction string.
      */
-    String runAI(int numDice, int diceVal);
+    String runAI();
 
 }

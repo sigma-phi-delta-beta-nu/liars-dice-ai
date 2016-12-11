@@ -5,15 +5,15 @@ package org.spdcalpoly;
  */
 public class SuperBasicAI implements AI {
 
+    private Game game;
 
     @Override
-    public void updateData() {
-        // Do nothing
+    public void setGame(Game game) {
+        this.game = game;
     }
 
     @Override
-    public String runAI(int numDice, int diceVal) {
-        return (numDice == diceVal) ? "Equals" : "Bullshit";
+    public String runAI() {
+        return "Do something";
     }
-
 }

@@ -17,15 +17,33 @@ public class GameManager {
     // Used to communicate with the AI player.
     private DialogManager dialogManager;
 
+    private AI[] aiPlayers;
+    private int aiIndex;
+
+    {
+        aiIndex = 0;
+    }
+
     /**
      * An empty constructor. Initializes all instance variables.
      */
     public GameManager() {
         dialogManager = new DialogManager();
+        aiPlayers = new AI[] { new ProbabilityAI() };
     }
 
     public GameManager(String inputFileName) {
         dialogManager = new DialogManager(inputFileName);
+        aiPlayers = new AI[] { new ProbabilityAI() };
+    }
+
+    public GameManager(AI[] aiPlayers) {
+        this.aiPlayers = aiPlayers;
+    }
+
+    public GameManager(String inputFileName, AI[] aiPlayers) {
+        dialogManager = new DialogManager(inputFileName);
+        this.aiPlayers = aiPlayers;
     }
 
     /**
@@ -83,10 +101,10 @@ public class GameManager {
         boolean usingWilds = dialogManager.promptBoolean("Are you playing with wild numbers (yes or no)? ");
         if (usingWilds) {
             ArrayList<Integer> wilds = dialogManager.promptIntegerArray("Which numbers are wild (delimit with spaces)? ", 6, false);
-            newGame = new Game(dialogManager, numPlayers, numDice, wilds, new ProbabilityAI(), 0, 0);
+            newGame = new Game(dialogManager, numPlayers, numDice, wilds, aiPlayers[aiIndex++ % aiPlayers.length], 0, 0);
         }
         else {
-            newGame = new Game(dialogManager, numPlayers, numDice, new ProbabilityAI(), 0, 0);
+            newGame = new Game(dialogManager, numPlayers, numDice, aiPlayers[aiIndex++ % aiPlayers.length], 0, 0);
         }
 
         return newGame;

@@ -45,6 +45,9 @@ class Game {
     // Position of the player who's turn it is currently
     private int currentPlayer;
 
+    private int currentNumDiceCall;
+    private int currentDiceValCall;
+
     /**
      * This constructor initializes all game data without using wilds.
      * @param players The number of players in the game.
@@ -56,6 +59,7 @@ class Game {
         playerHandSizes = new ArrayList<Integer>(Collections.nCopies(numPlayers, numDice));
         aiPosition = robotPosition;
         beepboop = robot;
+        beepboop.setGame(this);
         totalDiceCount = numPlayers * numDice;
         aiDice = new ArrayList<Integer>();
         usingWilds = false;
@@ -110,9 +114,9 @@ class Game {
 
             case "c":
             case "call":
-                int numDice = dialogManager.promptInteger("Enter number of dice called: ");
-                int diceVal = dialogManager.promptInteger("Enter the value of dice called: ");
-                dialogManager.println("You should say: " + beepboop.runAI(numDice, diceVal));
+                currentNumDiceCall = dialogManager.promptInteger("Enter number of dice called: ");
+                currentDiceValCall = dialogManager.promptInteger("Enter the value of dice called: ");
+                dialogManager.println("You should say: " + beepboop.runAI());
                 currentPlayer++;
                 break;
 
@@ -170,6 +174,11 @@ class Game {
                         playerHandSizes.get(aiPosition), true);
                 break;
 
+            case "q":
+            case "quit":
+                aiPosition = -1;
+                break;
+
             default:
                 dialogManager.println("Command not found. Please try again.");
                 break;
@@ -225,4 +234,29 @@ class Game {
         dialogManager.println("  roll [r]");
         dialogManager.println("  your turn\n");
     }
+
+    public int getNumPlayers() {
+        return numPlayers;
+    }
+
+    public ArrayList<Integer> getPlayerHandSizes() {
+        return playerHandSizes;
+    }
+
+    public int getTotalDiceCount() {
+        return totalDiceCount;
+    }
+
+    public ArrayList<Integer> getAiDice() {
+        return aiDice;
+    }
+
+    public int getCurrentNumDiceCall() {
+        return currentNumDiceCall;
+    }
+
+    public int getCurrentDiceValCall() {
+        return currentDiceValCall;
+    }
+
 }
