@@ -1,0 +1,15 @@
+2
+2
+pass
+pass
+roll
+3 4
+pass
+next
+1
+1
+next
+2
+1
+suggest
+quit
