@@ -4,4 +4,5 @@
 
 # Output files
 *.class
-output/*
+main/output/*
+test/output/*
