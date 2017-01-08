@@ -1,4 +1,1 @@
-1   4   5   5   0   1
-2   4   5   5   0   1
-3   5   5   5   1   0
-3   4   5   5   1   0
+Number of dice called	Total Dice	Number of dice the AI has	Number of dice the previous player has	Unsafe Call	Safe Call1	6	2	2	0	12	6	2	2	0	13	6	2	2	0	14	6	2	2	1	0

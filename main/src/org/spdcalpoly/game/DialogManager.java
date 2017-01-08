@@ -24,12 +24,15 @@ public class DialogManager {
     // Used to output to a console.
     private PrintStream output;
 
+    private boolean debug;
+
     /**
      * Empty constructor, initializes all instance variables.
      */
     public DialogManager() {
         input = new Scanner(System.in);
         output = System.out;
+        debug = false;
     }
 
     /**
@@ -40,50 +43,23 @@ public class DialogManager {
      */
     public DialogManager(String inputFile, String outputFile) {
 
+        this();
+
         // Check if an input filename was provided.
-        if (inputFile == null) {
-            input = new Scanner(System.in);
-        }
-        else {
+        if (inputFile != null) {
             setInput(inputFile);
         }
 
         // Check if an output filename was provided.
-        if (outputFile == null) {
-            output = System.out;
-        }
-        else {
+        if (outputFile != null) {
             setOutput(outputFile);
         }
 
     }
 
-    /**
-     * Attempt to open a file for reading.
-     * @param file the name of the file to open for reading.
-     */
-    void setInput(String file) {
-        try {
-            input = new Scanner(new File(file));
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-    }
-
-    /**
-     * Attempt to open a file for writing.
-     * @param file the name of the file to open for writing.
-     */
-    void setOutput(String file) {
-        try {
-            output = new PrintStream(file);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
+    public DialogManager(String inputFile, String outputFile, boolean debug) {
+        this(inputFile, outputFile);
+        this.debug = debug;
     }
 
     /**
@@ -102,46 +78,16 @@ public class DialogManager {
         output.println(text);
     }
 
-    /**
-     * Retrieves a generic object from the AI player using the provided prompt
-     * and type parser. Returns null if the input could not be parsed to the
-     * given type.
-     * @param prompt The string to output asking for the object.
-     * @param type The user-friendly string representing the generic datatype.
-     * @param typeParser The parser used to create the object from the input.
-     * @param <T> The type to parse the input into.
-     * @return The object of the specified type that was parsed.
-     */
-    private <T> T prompt(String prompt, String type, TypeParser<T> typeParser) {
-
-        // Input collected from the AI player.
-        String response;
-
-        // The generic object parsed from the AI player's input.
-        T result = null;
-
-        // Loop until an object is found.
-        while (result == null) {
-
-            // Prompt the AI player.
-            output.print(prompt);
-
-            // Retrieve AI player's input.
-            response = input.nextLine();
-
-            // Attempt to parse the input into the generic object.
-            result = typeParser.parse(response);
-
-            // If the parsing failed, print a message.
-            if (result == null) {
-                output.println("Sorry, \"" + input + "\" is not a valid "
-                        + type + ", please try again.");
-            }
-
+    public void debug(String text) {
+        if (debug) {
+            print(text);
         }
+    }
 
-        return result;
-
+    public void debugln(String text) {
+        if (debug) {
+            println(text);
+        }
     }
 
     /**
@@ -255,6 +201,76 @@ public class DialogManager {
         // Let's keep it simple.
         output.print(prompt);
         return input.nextLine();
+    }
+
+    /**
+     * Attempt to open a file for reading.
+     * @param file the name of the file to open for reading.
+     */
+    private void setInput(String file) {
+        try {
+            input = new Scanner(new File(file));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
+
+    /**
+     * Attempt to open a file for writing.
+     * @param file the name of the file to open for writing.
+     */
+    private void setOutput(String file) {
+        try {
+            output = new PrintStream(file);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
+
+    /**
+     * Retrieves a generic object from the AI player using the provided prompt
+     * and type parser. Returns null if the input could not be parsed to the
+     * given type.
+     * @param prompt The string to output asking for the object.
+     * @param type The user-friendly string representing the generic datatype.
+     * @param typeParser The parser used to create the object from the input.
+     * @param <T> The type to parse the input into.
+     * @return The object of the specified type that was parsed.
+     */
+    private <T> T prompt(String prompt, String type, TypeParser<T> typeParser) {
+
+        // Input collected from the AI player.
+        String response;
+
+        // The generic object parsed from the AI player's input.
+        T result = null;
+
+        // Loop until an object is found.
+        while (result == null) {
+
+            // Prompt the AI player.
+            output.print(prompt);
+
+            // Retrieve AI player's input.
+            response = input.nextLine();
+
+            // Attempt to parse the input into the generic object.
+            result = typeParser.parse(response);
+
+            // If the parsing failed, print a message.
+            if (result == null) {
+                output.println("Sorry, \"" + input + "\" is not a valid "
+                        + type + ", please try again.");
+            }
+
+        }
+
+        return result;
+
     }
 
     /**

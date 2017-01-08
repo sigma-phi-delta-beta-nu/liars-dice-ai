@@ -17,12 +17,13 @@ import java.util.Arrays;
  * @since 12/29/2016
  * @version 1.0
  */
-public final class MLAI1 extends AI implements MachineLearningAI {
+public final class MLAI1 extends AI implements Verifiable {
 
     private static final int INPUTS_COUNT = 4;
     private static final int OUTPUTS_COUNT = 2;
+
     private static final int INTERMEDIATE_NEURONS = 20;
-    private static final double LEARNING_RATE = 0.2;
+    private static final double LEARNING_RATE = 0.6;
     private static final double MAX_ERROR = 0.01;
 
     private static final int UNSAFE_OUTPUT = 4;
@@ -31,16 +32,23 @@ public final class MLAI1 extends AI implements MachineLearningAI {
     private MultiLayerPerceptron neuralNet;
     private double[] learningBuffer;
     private String[] trainingFiles;
+    private boolean verify;
 
     public MLAI1() {
         super();
         neuralNet = new MultiLayerPerceptron(INPUTS_COUNT, INTERMEDIATE_NEURONS, OUTPUTS_COUNT);
         learningBuffer = null;
         trainingFiles = null;
+        verify = false;
         MomentumBackpropagation learningRule = (MomentumBackpropagation) neuralNet.getLearningRule();
         learningRule.setLearningRate(LEARNING_RATE);
         learningRule.setMaxError(MAX_ERROR);
         train();
+    }
+
+    public MLAI1(boolean verify) {
+        this();
+        this.verify = verify;
     }
 
     @Override
@@ -91,7 +99,7 @@ public final class MLAI1 extends AI implements MachineLearningAI {
     @Override
     public void verifyOutput(boolean correct) {
         DataSet updateSet = new DataSet(INPUTS_COUNT, OUTPUTS_COUNT);
-        if (learningBuffer == null) {
+        if (learningBuffer == null || !verify) {
             return;
         }
         if (!correct && learningBuffer[UNSAFE_OUTPUT] < learningBuffer[SAFE_OUTPUT]) {
@@ -113,6 +121,11 @@ public final class MLAI1 extends AI implements MachineLearningAI {
         updateSet.addRow(learningBuffer);
         neuralNet.learn(updateSet);
         learningBuffer = null;
+    }
+
+    @Override
+    public boolean verifyOutput() {
+        return verify;
     }
 
     private void train() {

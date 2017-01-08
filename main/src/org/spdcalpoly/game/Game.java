@@ -3,7 +3,7 @@ package org.spdcalpoly.game;
 import org.spdcalpoly.player.Player;
 
 /**
- * game.java
+ * Game.java
  *
  * The game class is used to manage the rotating turns of each player in a game
  * of Liar's Dice. It also initializes the game and controls its termination.
@@ -14,29 +14,13 @@ import org.spdcalpoly.player.Player;
  */
 public class Game {
 
-
     // The input file to use when reading commands.
     private String inputFile;
-
-    /**
-     * Mutator for the input filename.
-     * @param inputFile the input filename to use for game dialog.
-     */
-    public void setInputFile(String inputFile) {
-        this.inputFile = inputFile;
-    }
-
 
     // The output file to use when responding to commands.
     private String outputFile;
 
-    /**
-     * Mutator for the output filename.
-     * @param outputFile the output filename to use for game dialog.
-     */
-    public void setOutputFile(String outputFile) {
-        this.outputFile = outputFile;
-    }
+    private boolean debug;
 
     // The dialog manager used to handle all game dialog.
     private DialogManager dm;
@@ -53,6 +37,7 @@ public class Game {
     public Game () {
         inputFile = null;
         outputFile = null;
+        debug = false;
         dm = null;
         data = null;
     }
@@ -69,6 +54,17 @@ public class Game {
             currentPlayer = data.getNextPlayer();
             currentPlayer.takeTurn(dm, data);
         } while (data.getTotalDice() > 0 && currentPlayer.getDiceCount() != -1);
+    }
+
+    /**
+     * Setup a game with a friendly message and some starting information.
+     */
+    public void setupGame() {
+        dm = new DialogManager(inputFile, outputFile, debug);
+        outputIntroduction();
+        int numPlayers = dm.promptInteger("How many players are there? ");
+        startingDiceCount = dm.promptInteger("How many dice does each player get to start? ");
+        data = new GameData(numPlayers);
     }
 
     /**
@@ -89,15 +85,22 @@ public class Game {
     }
 
     /**
-     * Setup a game with a friendly message and some starting information.
+     * Mutator for the input filename.
+     * @param inputFile the input filename to use for game dialog.
      */
-    public void setupGame() {
-        dm = new DialogManager(inputFile, outputFile);
-        outputIntroduction();
-        int numPlayers = dm.promptInteger("How many players are there? ");
-        startingDiceCount = dm.promptInteger("How many dice does each player get to start? ");
-        data = new GameData(numPlayers);
+    public void setInputFile(String inputFile) {
+        this.inputFile = inputFile;
     }
+
+    /**
+     * Mutator for the output filename.
+     * @param outputFile the output filename to use for game dialog.
+     */
+    public void setOutputFile(String outputFile) {
+        this.outputFile = outputFile;
+    }
+
+    public void setDebug(boolean debug) { this.debug = debug; }
 
     /**
      * Print a friendly introduction message.

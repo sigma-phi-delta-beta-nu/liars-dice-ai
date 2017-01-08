@@ -1,15 +1,15 @@
+3
 2
-2
+pass
 pass
 pass
 roll
 3 4
 pass
+pass
+pass
 next
-1
-1
-next
-3
-1
+5
+2
 suggest
 quit

@@ -6,18 +6,6 @@ import org.spdcalpoly.game.DialogManager;
 public class Player {
 
     private int diceCount;
-    public void setDiceCount(int diceCount) {
-        this.diceCount = diceCount;
-    }
-    public int getDiceCount() {
-        return diceCount;
-    }
-    public void addDie() {
-        diceCount += 1;
-    }
-    public void removeDie() {
-        diceCount -= 1;
-    }
 
     public void takeTurn(DialogManager dm, GameData data) {
         String response;
@@ -36,12 +24,16 @@ public class Player {
                 return false;
             case "c":
             case "call":
-                if (dm.promptBoolean("Were you right? ")) {
-                    data.getPrevPlayer().removeDie();
+                Player prevPlayer = data.getPrevPlayer();
+                boolean currentPlayerCorrect = dm.promptBoolean("Were you right? ");
+                if (currentPlayerCorrect) {
+                    prevPlayer.removeDie();
                 }
                 else {
-                    diceCount -= 1;
+                    diceCount--;
                 }
+                reportToPlayer(prevPlayer, !currentPlayerCorrect);
+                reportToPlayer(this, currentPlayerCorrect);
                 return true;
             case "e":
             case "exact":
@@ -71,6 +63,15 @@ public class Player {
         }
     }
 
+    private void reportToPlayer(Player player, boolean correct) {
+        if (player instanceof Verifiable) {
+            Verifiable vPlayer = (Verifiable) player;
+            if (vPlayer.verifyOutput()) {
+                vPlayer.verifyOutput(correct);
+            }
+        }
+    }
+
     private void outputHelp(DialogManager dm) {
         dm.println("Available commands:");
         dm.println("  help  [h]");
@@ -79,6 +80,22 @@ public class Player {
         dm.println("  next  [n]");
         dm.println("  pass  [p]");
         dm.println("  quit  [q]");
+    }
+
+    public void setDiceCount(int diceCount) {
+        this.diceCount = diceCount;
+    }
+
+    public int getDiceCount() {
+        return diceCount;
+    }
+
+    public void addDie() {
+        diceCount += 1;
+    }
+
+    public void removeDie() {
+        diceCount -= 1;
     }
 
 }

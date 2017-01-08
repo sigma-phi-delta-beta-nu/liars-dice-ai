@@ -3,6 +3,7 @@ package org.spdcalpoly.player;
 /**
  *
  */
-public interface MachineLearningAI {
+public interface Verifiable {
     void verifyOutput(boolean correct);
+    boolean verifyOutput();
 }

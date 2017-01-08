@@ -29,7 +29,7 @@ public abstract class AI extends Player {
             case "s":
             case "suggest":
                 dm.println("You should: " + runAI(data));
-                return true;
+                return false;
             default:
                 return super.processCommand(input, dm, data);
         }

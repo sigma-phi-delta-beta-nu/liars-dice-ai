@@ -16,6 +16,27 @@ public class GameData {
     // The list of players (including AIs) playing the game.
     private ArrayList<Player> players;
 
+    // The number of dice stated by the last player.
+    private int numDiceCall;
+
+    // The dice value stated by the last player.
+    private int diceValCall;
+
+    // The position of the current player in the rotation.
+    private int currentPlayer;
+
+    /**
+     * Constructor that adds a specific number of non-AI players to the game.
+     * @param numPlayers the number of non-AI players to add to the game.
+     */
+    GameData(int numPlayers) {
+        players = new ArrayList<Player>();
+        while (numPlayers-- > 0) {
+            players.add(new Player());
+        }
+        currentPlayer = -1;
+    }
+
     /**
      * Accessor for list of players.
      * @return an ArrayList of the players playing the game.
@@ -36,9 +57,6 @@ public class GameData {
         return total;
     }
 
-    // The number of dice stated by the last player.
-    private int numDiceCall;
-
     /**
      * Accessor for the number of dice stated by the last player.
      * @return the number of dice stated by the last player.
@@ -54,9 +72,6 @@ public class GameData {
     public void setNumDiceCall(int numDiceCall) {
         this.numDiceCall = numDiceCall;
     }
-
-    // The dice value stated by the last player.
-    private int diceValCall;
 
     /**
      * Accessor for the dice value stated by the last player.
@@ -74,10 +89,13 @@ public class GameData {
         this.diceValCall = diceValCall;
     }
 
-    // The position of the current player in the rotation.
-    private int currentPlayer;
     public Player getPrevPlayer() {
-        return players.get((currentPlayer - 1) % players.size());
+        Player prevPlayer;
+        int prevPlayerIndex = currentPlayer;
+        do {
+            prevPlayer = players.get(--currentPlayer % players.size());
+        } while (prevPlayer.getDiceCount() == 0);
+        return prevPlayer;
     }
 
     /**
@@ -90,18 +108,6 @@ public class GameData {
             nextPlayer = players.get(++currentPlayer % players.size());
         } while (nextPlayer.getDiceCount() == 0);
         return nextPlayer;
-    }
-
-    /**
-     * Constructor that adds a specific number of non-AI players to the game.
-     * @param numPlayers the number of non-AI players to add to the game.
-     */
-    GameData(int numPlayers) {
-        players = new ArrayList<Player>();
-        while (numPlayers-- > 0) {
-            players.add(new Player());
-        }
-        currentPlayer = -1;
     }
 
 }
