@@ -1,11 +1,15 @@
+package org.spdcalpoly;
+
+import org.junit.jupiter.api.Test;
 import org.spdcalpoly.game.Game;
 import org.spdcalpoly.player.ProbabilityAI;
 
 public class ProbabilityAITests {
 
-    public static void main(String[] args) {
+    @Test
+    void startsGame() {
         new Game() {{
-            setInputFile("res/probabilityai-test-1.txt");
+            setInputFile("src/test/resources/probabilityai-test-1.txt");
             setupGame();
             addPlayer(new ProbabilityAI());
             startGame();
